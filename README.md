@@ -46,250 +46,155 @@ Entry point (Sequence of run)
 
 
 
-1: Program.cs 
+### 1: Program.cs
+
+#### Using Directives:
+- `System`: Contains fundamental types and base types defining commonly-used value and reference data types, events and event handlers, interfaces, attributes, and processing exceptions.
+- `System.Windows.Forms`: Contains classes for creating Windows-based applications that utilize the rich user interface features of the Windows OS.
+
+#### Namespace Declaration:
+- The `ZpenSample` namespace contains the Program.cs file.
+
+#### Program Class:
+- `Program` is a static class containing the Main method, serving as the entry point for the application.
+
+#### Main Method:
+- The Main method is marked with the `[STAThread]` attribute, indicating the application's COM threading model is single-threaded apartment (STA).
+- Actions performed in Main:
+  - `Application.EnableVisualStyles()`: Enables visual styles for the application's controls, allowing it to use OS-provided visual styles.
+  - `Application.SetCompatibleTextRenderingDefault(false)`: Sets the default text rendering mode to be compatible with the OS default, using GDI+ for text rendering.
+  - `Application.Run(new FormZpenSample())`: Starts the application by creating and running an instance of the FormZpenSample form.
+
 
  
 
- 
+### 2: FormZpenSample.cs
 
-Using Directives: These directives bring in namespaces that contain classes and methods used in the code. For example, System contains fundamental types and base types that define commonly-used value and reference data types, events and event handlers, interfaces, attributes, and processing exceptions. System.Windows.Forms contains classes for creating Windows-based applications that take full advantage of the rich user interface features available in the Microsoft Windows operating system. 
+#### Using Directives:
+- Various namespaces are included, such as System, System.Windows.Forms, and System.Runtime.InteropServices.
 
-Namespace Declaration: The namespace keyword is used to declare a scope that contains a set of related objects. In this case, the Program.cs file is in the ZpenSample namespace. 
+#### Namespace Declaration:
+- The code is within the ZpenSample namespace.
 
-Program Class: This is a static class named Program. It contains the Main method, which serves as the entry point for the application. 
+#### Class Declaration:
+- Declares the FormZpenSample class, which inherits from Form and represents the main form of the application.
 
-Main Method: The Main method is the starting point for the application. It is marked with the [STAThread] attribute, which indicates that the COM threading model for the application is single-threaded apartment (STA). Inside Main, the following actions are performed: 
+#### DllImport Attribute:
+- Used to indicate that methods are implemented in unmanaged code (in zpen.dll), allowing managed code to call unmanaged functions.
 
-Application.EnableVisualStyles(): This enables visual styles for the application's controls. It allows your application to take advantage of the visual styles provided by the operating system. 
+#### Static Variables and Constants:
+- Contains static variables and constants used throughout the code, including device connection status, pen data, command sizes, etc.
 
-Application.SetCompatibleTextRenderingDefault(false): This sets the application's default text rendering mode to be compatible with the operating system's default mode. In this case, it's set to false, indicating that GDI+ will be used for text rendering. 
+#### Constructor:
+- Initializes the form and calls InitViews() and StartGetData() methods.
 
-Application.Run(new FormZpenSample()): This starts the application by creating and running an instance of the FormZpenSample form. 
+#### Methods:
+- InitDongle(): Initializes Bluetooth AP connection status.
+- StartGetData(): Opens and initializes devices and starts a thread for receiving HID data.
+- ReceiveHidDataFromDongle(): Thread function for continuously receiving HID data.
+- SetTextSafePost(): Processes received HID data and updates UI elements.
+- DecodeData(): Decodes raw data into ZigPointF objects.
+- DrawInBitmap(): Draws received pen data onto PictureBox.
+- GetMacAddress(), GetClientListFromFile(), TwoDimensionToOnedDimension(): Methods for reading configuration files.
+- InitViews(): Initializes UI elements.
+- CheckDongleIsInsert(): Checks if the dongle is inserted.
+- USBEventHandler(): Handles USB events.
 
- 
+#### Event Handlers:
+- FormZpenSample_Load(), FormZpenSample_FormClosed(): Handle form load and form closed events.
 
- 
+#### Flow of the Code:
+- Begins with namespace declaration and using directives.
+- Defines the FormZpenSample class representing the main form.
+- Declares static variables and constants.
+- Imports external methods from zpen.dll.
+- Initializes the form and starts data reception.
+- Handles USB events and UI updates.
+- Closes the form when needed.
 
- 
-
-2: FormZpenSample.cs 
-
- 
-
-Using Directives: These directives bring in various namespaces required for the code to function properly. For example, System.Windows.Forms is required for working with Windows Forms, and System.Runtime.InteropServices is required for working with unmanaged code. 
-
-Namespace Declaration: The code is within the ZpenSample namespace. 
-
-Class Declaration: The FormZpenSample class is declared, which inherits from Form. This class represents the main form of the application. 
-
-DllImport Attribute: This attribute is used to indicate that the methods are implemented in unmanaged code (in zpen.dll). It allows managed code to call unmanaged functions. 
-
-Static Variables and Constants: The class contains various static variables and constants used throughout the code. These include variables for storing device connection status, offline pen data, HID command size, pen size, pressure sensitivity value, etc. 
-
-Hashtable: Two Hashtable objects (hashtablePictureBox and hashtablePen) are used to store references to PictureBox and Pen objects, respectively. 
-
-Constructor: The constructor initializes the form and calls InitViews() and StartGetData() methods. 
-
-Methods: 
-
-InitDongle(): Initializes the Bluetooth AP connection status. 
-
-StartGetData(): Opens and initializes devices and starts a thread for receiving HID data. 
-
-ReceiveHidDataFromDongle(): Thread function for continuously receiving HID data. 
-
-SetTextSafePost(): Processes received HID data and updates UI elements accordingly. 
-
-DecodeData(): Decodes raw data into ZigPointF objects. 
-
-DrawInBitmap(): Draws received pen data onto the corresponding PictureBox. 
-
-GetMacAddress(): Reads MAC addresses from a configuration file. 
-
-GetClientListFromFile(): Reads ID list from a configuration file. 
-
-TwoDimensionToOnedDimension(): Converts a 2D array to a 1D array. 
-
-InitViews(): Initializes UI elements such as PictureBox and Label. 
-
-CheckDongleIsInsert(): Checks if the dongle is inserted. 
-
-USBEventHandler(): Event handler for USB events (insertion/removal). 
-
-Event Handlers: 
-
-FormZpenSample_Load(): Handles the form load event. 
-
-FormZpenSample_FormClosed(): Handles the form closed event. 
-
-This code appears to handle device initialization, data reception, processing, and UI updates based on the received data. It also handles USB events related to dongle insertion/removal. 
-
- 
-
-Flow of the CODE 
-
- 
-
- 
-
-Namespace and Using Directives: The file starts with namespace declaration and using directives, bringing in necessary namespaces for the code. 
-
-Class Declaration: The FormZpenSample class is declared, which represents the main form of the application. 
-
-Static Variables and Constants: Various static variables and constants are defined, including arrays for storing PictureBoxes, Labels, Bitmaps, and Graphics objects. These variables are used throughout the class. 
-
-DllImport Attribute: External methods from zpen.dll are declared using the DllImport attribute. These methods are used to interact with the pen device. 
-
-Constructor: The constructor initializes the form and calls InitViews() and StartGetData() methods. 
-
-InitDongle(): This method initializes the Bluetooth AP connection status by checking if the dongle is inserted. 
-
-StartGetData(): This method opens and initializes devices and starts a thread for receiving HID data. 
-
-ReceiveHidDataFromDongle(): This method runs in a separate thread continuously, receiving HID data and processing it. 
-
-SetTextSafePost(): This method processes received HID data and updates UI elements accordingly. 
-
-DecodeData(): This method decodes raw data into ZigPointF objects. 
-
-DrawInBitmap(): This method draws received pen data onto the corresponding PictureBox. 
-
-GetMacAddress(), GetClientListFromFile(), TwoDimensionToOnedDimension(): These methods are used to read MAC addresses and client lists from configuration files. 
-
-InitViews(): This method initializes UI elements such as PictureBoxes and Labels, and associates MAC addresses with PictureBoxes. 
-
-CheckDongleIsInsert(): This method checks if the dongle is inserted. 
-
-USBEventHandler(): This method handles USB events such as insertion and removal of devices. 
-
-Event Handlers: FormZpenSample_Load() and FormZpenSample_FormClosed() handle form load and form closed events, respectively. 
-
-The flow of the code involves initializing the form, setting up device connections, handling data reception, processing and drawing pen data, managing device connections, and responding to USB events. The code is structured to handle these tasks efficiently and interact with the UI elements appropriately. 
+The code manages device initialization, data reception, processing, and UI updates based on received data. It also handles USB events related to dongle insertion/removal efficiently.
 
  
 
  
 
  
+### 3: USBWatcher.cs
 
-3: USBWatcher.cs 
+#### Namespace and Using Directives:
+- Part of the ZpenSample namespace.
+- Includes using directives to import necessary namespaces.
 
- 
+#### Structures:
+- PnPEntityInfo: Defines a structure holding information about a Plug and Play device.
+- USBControllerDevice: Defines a structure representing a USB controller device.
 
-The USBWatcher.cs file contains a class named USBWatcher along with some supporting structures and methods for monitoring USB devices. 
+#### Partial Class USB:
+- Contains methods for monitoring USB insertion and removal events and querying USB device information.
 
-Here's a breakdown of the file: 
+#### Fields:
+- insertWatcher: ManagementEventWatcher object for monitoring USB insertion events.
+- removeWatcher: ManagementEventWatcher object for monitoring USB removal events.
 
-Namespace and Using Directives: 
+#### Methods:
+- AddUSBEventWatcher: Adds event watchers for USB insertion and removal events.
+- RemoveUSBEventWatcher: Removes USB event watchers.
+- WhoUSBControllerDevice: Retrieves information about the USB controller device involved in an event.
+- AllUsbDevices, WhoUsbDevice, and similar methods: Query information about USB devices based on various criteria.
 
-The file is part of the ZpenSample namespace. 
+#### Region UsbDevice and PnPEntity:
+- Contains methods related to querying USB devices and Plug and Play entities, respectively.
 
-It includes several using directives to import namespaces necessary for the functionality implemented in the file. 
+#### Summary Comments:
+- Each member has XML documentation comments providing descriptions and usage information.
 
-Structures: 
-
-PnPEntityInfo: Defines a structure to hold information about a Plug and Play device, including its PNPDeviceID, name, description, service, status, vendor ID, product ID, and class GUID. 
-
-USBControllerDevice: Defines a structure to represent a USB controller device, containing an antecedent and dependent field representing the USB controller device ID and USB Plug and Play device ID, respectively. 
-
-Partial Class USB: 
-
-This class contains methods for monitoring USB insertion and removal events and querying information about USB devices. 
-
-Fields: 
-
-insertWatcher: A ManagementEventWatcher object for monitoring USB insertion events. 
-
-removeWatcher: A ManagementEventWatcher object for monitoring USB removal events. 
-
-Methods: 
-
-AddUSBEventWatcher: Adds event watchers for USB insertion and removal events. It takes event handler delegates for USB insertion and removal events and a TimeSpan parameter specifying the allowed lag time for sending notifications. 
-
-RemoveUSBEventWatcher: Removes USB event watchers. 
-
-WhoUSBControllerDevice: Retrieves information about the USB controller device involved in a USB insertion or removal event. 
-
-AllUsbDevices, WhoUsbDevice, and other similar methods: Provide functionality to query information about USB devices based on various criteria such as vendor ID, product ID, device ID, and service. 
-
-Region UsbDevice and PnPEntity: 
-
-These regions contain methods related to querying USB devices and Plug and Play entities, respectively. 
-
-Summary Comments: 
-
-Each member (structures, methods) has XML documentation comments providing descriptions and usage information. 
-
-Overall, this file encapsulates the functionality for monitoring USB events and retrieving information about USB devices and Plug and Play entities within the system. 
+#### Summary:
+- Encapsulates functionality for monitoring USB events and retrieving information about USB devices and Plug and Play entities within the system.
 
  
 
  
 
- 
-
-3: ZigPointF.cs 
-
-The ZigPointF.cs file defines a class named ZigPointF, which appears to represent a point in a two-dimensional space with additional properties p, r, and t. However, some of the properties (r and t) are currently commented out in the code. 
-
-Here's a breakdown of the class: 
-
-Fields: 
-
-private float x: Represents the x-coordinate of the point. 
-
-private float y: Represents the y-coordinate of the point. 
-
-private int p: Represents a property p of type int. 
-
-Constructor: 
-
-There's no explicit constructor defined in the class. 
-
-Methods: 
-
-SetX(float x): Sets the value of the x-coordinate. 
-
-GetX(): Retrieves the value of the x-coordinate. 
-
-SetY(float y): Sets the value of the y-coordinate. 
-
-GetY(): Retrieves the value of the y-coordinate. 
-
-SetP(int p): Sets the value of the property p. 
-
-GetP(): Retrieves the value of the property p. 
-
-Commented-out code: 
-
-There are commented-out fields (r and t) and their corresponding setter and getter methods (SetR, GetR, SetT, GetT). 
-
-It seems like the class is designed to represent a point with x and y coordinates, along with additional properties. However, the commented-out code suggests that there might be additional properties (r and t) that were considered but not implemented or used in the current version of the code. 
 
  
+ ### 4: ZigPointF.cs
 
-4: DataPassByStaticField.cs  
+The ZigPointF.cs file defines a class named ZigPointF, representing a point in a two-dimensional space with additional properties.
 
-The DataPassByStaticField.cs file defines a class named DataPassByStaticField, which contains static fields used for passing data related to device types, Product IDs (PID), and Vendor IDs (VID). 
+#### Fields:
+- private float x: Represents the x-coordinate of the point.
+- private float y: Represents the y-coordinate of the point.
+- private int p: Represents an additional property p of type int.
 
-Here's a breakdown of the class: 
+#### Constructor:
+- No explicit constructor is defined in the class.
 
-Static Fields: 
+#### Methods:
+- SetX(float x): Sets the value of the x-coordinate.
+- GetX(): Retrieves the value of the x-coordinate.
+- SetY(float y): Sets the value of the y-coordinate.
+- GetY(): Retrieves the value of the y-coordinate.
+- SetP(int p): Sets the value of the additional property p.
+- GetP(): Retrieves the value of the additional property p.
 
-deviceTypeUSB: Represents the device type USB. 
+#### Commented-out code:
+- There are commented-out fields (r and t) and their corresponding setter and getter methods (SetR, GetR, SetT, GetT). These suggest the consideration of additional properties (r and t) that were not implemented or used in the current version of the code.
 
-deviceTypeHID: Represents the device type HID. 
 
-pid: Represents the string "PID", typically used as a label for Product IDs. 
+### 5: DataPassByStaticField.cs
 
-vid: Represents the string "VID", typically used as a label for Vendor IDs. 
+The DataPassByStaticField.cs file defines a class named DataPassByStaticField, which contains static fields used for passing data related to device types, Product IDs (PID), and Vendor IDs (VID).
 
-pid_value1, pid_value2, pid_value3: Represent three different Product ID values. 
+#### Static Fields:
+- deviceTypeUSB: Represents the device type USB.
+- deviceTypeHID: Represents the device type HID.
+- pid: Represents the string "PID", typically used as a label for Product IDs.
+- vid: Represents the string "VID", typically used as a label for Vendor IDs.
+- pid_value1, pid_value2, pid_value3: Represent three different Product ID values.
+- vid_value1, vid_value2: Represent two different Vendor ID values.
 
-vid_value1, vid_value2: Represent two different Vendor ID values. 
+These static fields are declared as public, allowing them to be accessed from outside the class without an instance of the class.
 
-These static fields are declared as public, meaning they can be accessed from outside the class without an instance of the class. 
-
-The purpose of these fields seems to be providing convenient access to commonly used device-related values such as device types, PID, and VID. These values can be accessed statically without instantiating the DataPassByStaticField class. 
+The purpose of these fields is to provide convenient access to commonly used device-related values such as device types, PID, and VID. These values can be accessed statically without instantiating the DataPassByStaticField class.
 
  
