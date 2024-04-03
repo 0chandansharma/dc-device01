@@ -2764,12 +2764,12 @@
             // 
             this.labelConnectStatus.AutoSize = true;
             this.labelConnectStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelConnectStatus.Font = new System.Drawing.Font("宋体", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelConnectStatus.Font = new System.Drawing.Font("宋体", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))); //chinese font name
             this.labelConnectStatus.Location = new System.Drawing.Point(3, 0);
             this.labelConnectStatus.Name = "labelConnectStatus";
             this.labelConnectStatus.Size = new System.Drawing.Size(1105, 40);
             this.labelConnectStatus.TabIndex = 1;
-            this.labelConnectStatus.Text = "蓝牙AP已连接";
+            this.labelConnectStatus.Text = "Bluetooth AP is connected";
             this.labelConnectStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormZpenSample

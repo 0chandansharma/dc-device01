@@ -1,4 +1,5 @@
-﻿using System;
+﻿//this file encapsulates the functionality for monitoring USB events and retrieving information about USB devices and Plug and Play entities within the system.
+using System;
 using System.Management;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace ZpenSample
+namespace ZpenSample 
+// Namespace and Using Directives:
+
+// The file is part of the ZpenSample namespace.
+// It includes several using directives to import namespaces necessary for the functionality implemented in the file.
 {
-    class USBWatcher
+    class USBWatcher  //The USBWatcher.cs file contains a class named USBWatcher along with some supporting structures and methods for monitoring USB devices.
     {
 
     }
@@ -16,7 +21,7 @@ namespace ZpenSample
     /// <summary>
     /// Plug and Play device information structure
     /// </summary>
-    public struct PnPEntityInfo
+    public struct PnPEntityInfo  //PnPEntityInfo: Defines a structure to hold information about a Plug and Play device, including its PNPDeviceID, name, description, service, status, vendor ID, product ID, and class GUID.
     {
         public String PNPDeviceID;      // Device ID
         public String Name;             // Device name
@@ -31,7 +36,7 @@ namespace ZpenSample
     /// <summary>
     /// USB control device type
     /// </summary>
-    public struct USBControllerDevice
+    public struct USBControllerDevice  //USBControllerDevice: Defines a structure to represent a USB controller device, containing an antecedent and dependent field representing the USB controller device ID and USB Plug and Play device ID, respectively.
     {
         /// <summary>
         /// USB controller device ID
@@ -47,26 +52,30 @@ namespace ZpenSample
     /// <summary>
     /// Monitor USB plugging and unplugging
     /// </summary>
-    public partial class USB
+    public partial class USB  //This class contains methods for monitoring USB insertion and removal events and querying information about USB devices.
     {
         /// <summary>
         /// USB insertion event monitoring
         /// </summary>
         private ManagementEventWatcher insertWatcher = null;
-
+        // insertWatcher: A ManagementEventWatcher object for monitoring USB insertion events.
+     
         /// <summary>
         /// USB unplug event monitoring
         /// </summary>
         private ManagementEventWatcher removeWatcher = null;
-
+        // removeWatcher: A ManagementEventWatcher object for monitoring USB removal events.
         /// <summary>
         /// Add USB event monitor
         /// </summary>
         /// <param name="usbInsertHandler">USB insertion event handler</param>
         /// <param name="usbRemoveHandler">USB unplug event handler</param>
         /// <param name="withinInterval">Allowed lag time for sending notifications</param>
+        /// 
+
+        //Methods
         public Boolean AddUSBEventWatcher(EventArrivedEventHandler usbInsertHandler, EventArrivedEventHandler usbRemoveHandler, TimeSpan withinInterval)
-        {
+        {   //AddUSBEventWatcher: Adds event watchers for USB insertion and removal events. It takes event handler delegates for USB insertion and removal events and a TimeSpan parameter specifying the allowed lag time for sending notifications.
             try
             {
                 ManagementScope Scope = new ManagementScope("root\\CIMV2");
@@ -106,7 +115,7 @@ namespace ZpenSample
         /// Remove USB event monitor
         /// </summary>
         public void RemoveUSBEventWatcher()
-        {
+        {   //RemoveUSBEventWatcher: Removes USB event watchers.
             if (insertWatcher != null)
             {
                 insertWatcher.Stop();
@@ -126,7 +135,7 @@ namespace ZpenSample
         /// <param name="e">USB plug and unplug event parameters</param>
         /// <returns>USB control device ID where plugging and unplugging occurred</returns>
         public static USBControllerDevice[] WhoUSBControllerDevice(EventArrivedEventArgs e)
-        {
+        { //WhoUSBControllerDevice: Retrieves information about the USB controller device involved in a USB insertion or removal event.
             ManagementBaseObject mbo = e.NewEvent["TargetInstance"] as ManagementBaseObject;
             if (mbo != null && mbo.ClassPath.ClassName == "Win32_USBControllerDevice")
             {
@@ -144,7 +153,7 @@ namespace ZpenSample
         /// Get all USB device entities (filter devices without VID and PID)
         /// </summary>
         public static PnPEntityInfo[] AllUsbDevices
-        {
+        {   //AllUsbDevices, WhoUsbDevice, and other similar methods: Provide functionality to query information about USB devices based on various criteria such as vendor ID, product ID, device ID, and service.
             get
             {
                 return WhoUsbDevice(UInt16.MinValue, UInt16.MinValue, Guid.Empty);
@@ -344,6 +353,9 @@ namespace ZpenSample
         /// </summary>
         public static PnPEntityInfo[] AllPnPEntities
         {
+            // Region UsbDevice and PnPEntity:
+
+            // These regions contain methods related to querying USB devices and Plug and Play entities, respectively.
             get
             {
                 return WhoPnPEntity(UInt16.MinValue, UInt16.MinValue, Guid.Empty);

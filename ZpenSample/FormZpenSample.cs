@@ -1,19 +1,21 @@
-﻿using System;
+﻿// These variables and constants are used throughout the class to store data, manage device connections, process pen data, and perform various operations related to drawing and device management. They provide a structured way to manage and manipulate data within the class.
+// The flow of the code involves initializing the form, setting up device connections, handling data reception, processing and drawing pen data, managing device connections, and responding to USB events. The code is structured to handle these tasks efficiently and interact with the UI elements appropriately.
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
+using System.Windows.Forms;   //These directives bring in various namespaces required for the code to function properly. For example, System.Windows.Forms is required for working with Windows Forms, 
+using System.Runtime.InteropServices; // System.Runtime.InteropServices is required for working with unmanaged code.
 using System.Threading;
 using System.IO;
 using System.Collections;
 using System.Drawing.Drawing2D;
 using System.Management;
-namespace ZpenSample
+namespace ZpenSample   //The code is within the ZpenSample namespace.
 {
-    public partial class FormZpenSample : Form
+    public partial class FormZpenSample : Form  //The FormZpenSample class is declared, which inherits from Form. This class represents the main form of the application.
     {
-        [DllImport(@"zpen.dll")]
+        [DllImport(@"zpen.dll")] //This attribute is used to indicate that the methods are implemented in unmanaged code (in zpen.dll). It allows managed code to call unmanaged functions.
         public static extern int OpenDevices();
 
         [DllImport(@"zpen.dll")]
@@ -40,21 +42,21 @@ namespace ZpenSample
         [DllImport(@"zpen.dll", EntryPoint = "DeleteOfflineDataPage", CallingConvention = CallingConvention.Winapi)]
         public static extern byte DeleteOfflineDataPage(byte[] name);
 
-        private static int CAPACITY_SIZE = 60;
+        private static int CAPACITY_SIZE = 60;  //This constant defines the capacity size for arrays used in the class. It appears to be set to 60, indicating that arrays such as pictureBoxes, labels, bitmaps, etc., will have a fixed size of 60 elements.
 
-        private static PictureBox[] pictureBoxes = new PictureBox[CAPACITY_SIZE];
-        private static Label[] labels = new Label[CAPACITY_SIZE];
-        private static Bitmap[] bitmaps = new Bitmap[CAPACITY_SIZE];
-        private static Graphics[] graphics = new Graphics[CAPACITY_SIZE];
-        private static PointF[] startPoint = new PointF[CAPACITY_SIZE];
+        private static PictureBox[] pictureBoxes = new PictureBox[CAPACITY_SIZE]; //This is an array of PictureBox objects with a size defined by CAPACITY_SIZE. These PictureBox objects are used to display pen data on the form.
+        private static Label[] labels = new Label[CAPACITY_SIZE]; // Similar to pictureBoxes, this is an array of Label objects used to display device MAC addresses on the form.
+        private static Bitmap[] bitmaps = new Bitmap[CAPACITY_SIZE]; //This array stores Bitmap objects used for drawing pen data received from the devices.
+        private static Graphics[] graphics = new Graphics[CAPACITY_SIZE]; //This array stores Graphics objects used for drawing on the Bitmap objects.
+        private static PointF[] startPoint = new PointF[CAPACITY_SIZE]; //These arrays store PointF objects representing the start and end points of pen strokes drawn on the PictureBox.
         private static PointF[] endPoint = new PointF[CAPACITY_SIZE];
-        private static bool[] firstPoints = new bool[CAPACITY_SIZE];
+        private static bool[] firstPoints = new bool[CAPACITY_SIZE]; //This array stores boolean values indicating whether the current point being processed is the first point of a stroke.
 
         /// <summary>
         /// Hashtable storage collection 60 个 pictureBox
         /// </summary>
-        private static Hashtable hashtablePictureBox = new Hashtable();
-
+        private static Hashtable hashtablePictureBox = new Hashtable();   //Hashtable: Two Hashtable objects (hashtablePictureBox and hashtablePen) are used to store references to PictureBox and Pen objects, respectively.
+        //These Hashtable objects store references to PictureBox and Pen objects, respectively, indexed by device MAC addresses.
         /// <summary>
         /// Hashtable storage collection 60 个 pen
         /// </summary>
@@ -63,18 +65,18 @@ namespace ZpenSample
         /// <summary>
         /// base path for absolute path
         /// </summary>
-        private static string basePath = AppDomain.CurrentDomain.BaseDirectory;
+        private static string basePath = AppDomain.CurrentDomain.BaseDirectory; //This variable stores the base directory path of the application.
         /// <summary>
         /// The path to the device information list file
         /// </summary>
-        private static string addressListPath = "client-mac-list.txt";
+        private static string addressListPath = "client-mac-list.txt"; //This variable stores the relative path to the device information list file (client-mac-list.txt).
 
         private delegate void PenDataToPictureBoxDelegate(int serialNumber, PictureBox pictureBox, Pen pen, string mac, byte[] buffer55);
         /// <summary>
         /// Device connection flag
         /// </summary>
         private static int CLIENT_CONNECT_TAG = 0x12;
-
+        //CLIENT_CONNECT_TAG, CLIENT_CONNECT_OK_TAG, CLIENT_CONNECT_ERROR_TAG: These constants represent flags for device connection status.
         /// <summary>
         /// Device connection success flag
         /// </summary>
@@ -86,22 +88,22 @@ namespace ZpenSample
         /// <summary>
         /// Offline handwritten notes 
         /// </summary>
-        private static int OFFLINE_PENDATA_TAG = 0x42;//Query notes
+        private static int OFFLINE_PENDATA_TAG = 0x42;//Query notes,  OFFLINE_PENDATA_TAG, OFFLINE_PENDATA_DEL_TAG: These constants represent flags for offline pen data operations.
         private static int OFFLINE_PENDATA_DEL_TAG = 0x33;//Delete note
         private static int HID_CMD_SIZE = 32; // 
-        private static byte[] offline_pen_filename = new byte[HID_CMD_SIZE];
-        private static byte[] hid_cmd_data = new byte[HID_CMD_SIZE];
+        private static byte[] offline_pen_filename = new byte[HID_CMD_SIZE]; //offline_pen_filename and hid_cmd_data: These arrays store HID data used for offline pen data operations.
+        private static byte[] hid_cmd_data = new byte[HID_CMD_SIZE]; //HID_CMD_SIZE: This constant represents the size of HID command data.
         /// <summary>
         /// Set pen size
         /// </summary>
-        private static float penSize = 2.0f;
+        private static float penSize = 2.0f;  //This variable stores the size of the pen used for drawing.
 
-        private static float ZigPressureValue256Level = 0.00390625f;
+        private static float ZigPressureValue256Level = 0.00390625f;  //This variable stores a constant representing the pressure sensitivity value. It appears to be set to 0.00390625f.
         private byte[] arrayMacList;
         /// <summary>
         /// Flags for handwritten data 
         /// </summary>
-        private static int PENDATA_TAG1 = 0x30;
+        private static int PENDATA_TAG1 = 0x30; //PENDATA_TAG1, PENDATA_TAG2, PENDATA_TAG3: These constants represent flags for different types of pen data.
         private static int PENDATA_TAG2 = 0x31;
         private static int PENDATA_TAG3 = 0x32; //Supplementary data
 
@@ -109,12 +111,12 @@ namespace ZpenSample
 
         public FormZpenSample()
         {
-            InitializeComponent();
-            InitViews();
+            InitializeComponent();  //The constructor initializes the form and calls InitViews() and StartGetData() methods.
+            InitViews();  //
             StartGetData();
             InitDongle();
         }
-        private void InitDongle()
+        private void InitDongle()  // Initializes the Bluetooth AP connection status.
         {
             bool isInsert = CheckDongleIsInsert();
             if (isInsert)
@@ -129,7 +131,7 @@ namespace ZpenSample
             }
         }
 
-        private void StartGetData()
+        private void StartGetData() //Opens and initializes devices and starts a thread for receiving HID data.
         {
             int openRet = OpenDevices();
             int initRet = InitDevices();
@@ -139,7 +141,7 @@ namespace ZpenSample
             receiveHidDataFromDongleThread.Name = "receiveHidDataFromDongleThread";
             receiveHidDataFromDongleThread.Start();
         }
-        private void ReceiveHidDataFromDongle()
+        private void ReceiveHidDataFromDongle() //Thread function for continuously receiving HID data.
         {
             while (true) // true
             {
@@ -154,7 +156,7 @@ namespace ZpenSample
             }
         }
   
-        public void SetTextSafePost(object buffer)
+        public void SetTextSafePost(object buffer) //Processes received HID data and updates UI elements accordingly.
         {
             byte[] newBuffer = (byte[])(buffer);
             if (newBuffer[2] == PENDATA_TAG1 || newBuffer[2] == PENDATA_TAG2) //  handwritten data
@@ -197,7 +199,7 @@ namespace ZpenSample
         /// <param name="y2"></param>
         /// <param name="pressureValue">Pressure sensitivity value</param>
         /// <returns></returns>
-        private ZigPointF DecodeData(byte x1, byte x2, byte y1, byte y2, byte pressureValue)
+        private ZigPointF DecodeData(byte x1, byte x2, byte y1, byte y2, byte pressureValue) //Decodes raw data into ZigPointF objects.
         {
             ZigPointF zigPointF = new ZigPointF();
             float x = BitConverter.ToInt16(new byte[2] { x1, x2 }, 0);
@@ -217,7 +219,7 @@ namespace ZpenSample
         /// <param name="pen">brush object</param>
         /// <param name="mac">MAC address</param>
         /// <param name="buffer55">handwriting data</param>
-        private void DrawInBitmap(int serialNumber, PictureBox pictureBox, Pen pen, string mac, byte[] buffer55)
+        private void DrawInBitmap(int serialNumber, PictureBox pictureBox, Pen pen, string mac, byte[] buffer55) //Draws received pen data onto the corresponding PictureBox.
         {
             // InvokeRequired == true  It is to determine whether the current thread is a UI thread. If true, it is not a UI thread, so a delegate is used.
             // If false then no delegate is used.
@@ -278,7 +280,7 @@ namespace ZpenSample
         /// Get all mac addresses from configuration file
         /// </summary>
         /// <returns>mac array</returns>
-        private string[] GetMacAddress()
+        private string[] GetMacAddress() //Reads MAC addresses from a configuration file.
         {
             string path = basePath + addressListPath;
             byte[,] defaultClientArrayFromFile = GetClientListFromFile(path);
@@ -298,7 +300,7 @@ namespace ZpenSample
         /// </summary>
         /// <param name="path">Path to client-mac-list.txt </param>
         /// <returns></returns>
-        public byte[,] GetClientListFromFile(string path)
+        public byte[,] GetClientListFromFile(string path) //Reads ID list from a configuration file.
         {
             byte[,] defaultIDArray = new byte[60, 4];
             StreamReader sr = new StreamReader(path, Encoding.ASCII);
@@ -339,7 +341,7 @@ namespace ZpenSample
         /// </summary>
         /// <param name="defaultClientArray">Two-dimensional array</param>
         /// <returns>one-dimensional array</returns>
-        public byte[] TwoDimensionToOnedDimension(byte[,] defaultClientArray)
+        public byte[] TwoDimensionToOnedDimension(byte[,] defaultClientArray) //Converts a 2D array to a 1D array.
         {
             byte[] tempArray = new byte[60 * 4];
             for (int i = 0; i < defaultClientArray.Length; i++)
@@ -350,7 +352,7 @@ namespace ZpenSample
             return tempArray;
         }
 
-        private void InitViews()
+        private void InitViews() //Initializes UI elements such as PictureBox and Label.
         {
             hashtablePictureBox.Clear();
             hashtablePen.Clear();
@@ -399,7 +401,7 @@ namespace ZpenSample
         /// Check if dongle is inserted 
         /// </summary>
         /// <returns>Whether to insert</returns>
-        public bool CheckDongleIsInsert()
+        public bool CheckDongleIsInsert() //Checks if the dongle is inserted.
         {
             PnPEntityInfo[] pnPEntityInfos = USB.WhoPnPEntity(DataPassByStaticField.vid_value2, DataPassByStaticField.pid_value2);
             if (pnPEntityInfos != null)
@@ -412,18 +414,18 @@ namespace ZpenSample
             }
         }
 
-        private void FormZpenSample_Load(object sender, EventArgs e)
+        private void FormZpenSample_Load(object sender, EventArgs e) //Handles the form load event.
         {
             ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
         }
 
-        private void FormZpenSample_FormClosed(object sender, FormClosedEventArgs e)
+        private void FormZpenSample_FormClosed(object sender, FormClosedEventArgs e) //Handles the form closed event.
         {
             ezUSB.RemoveUSBEventWatcher();
         }
 
 
-        private void USBEventHandler(object sender, EventArrivedEventArgs e)
+        private void USBEventHandler(object sender, EventArrivedEventArgs e) //Event handler for USB events (insertion/removal).
         {
             foreach (USBControllerDevice Device in USB.WhoUSBControllerDevice(e))
             {
