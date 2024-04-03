@@ -2,51 +2,47 @@
 Code to data collection device
 Entry point (Sequence of run) 
 
-ZpenSample - Root directory.
-bin - Directory containing compiled binary files (output).
-Debug - Debug build output directory.
-Release - Release build output directory.
-obj - Directory containing object files generated during compilation.
-Debug - Debug build object files directory.
-Release - Release build object files directory.
-properties - Directory containing project properties.
-AssemblyInfo.cs - Contains assembly-level attributes such as title, description, version, etc.
-Resource.Designer.cs - Auto-generated file for strongly-typed resource access.
-Resource.resx - Resource file for storing localized strings, images, etc.
-Settings.Designer.cs - Auto-generated file for strongly-typed settings access.
-Settings.settings - Settings file for storing application settings.
-app.config - Configuration file for the application.
-DataPassByStaticField.cs - C# file containing a class for handling data passing by static fields.
-FromZopenSample.cs - C# file containing a class related to a sample from Zopen.
-FromZopenSample.Designer.cs - C# file containing design-time code for the sample from Zopen.
-FromZopenSample.resx - Resource file for the sample from Zopen.
-Program.cs - C# file containing the entry point and main logic of the application.
-USBWatcher.cs - C# file containing a class for watching USB devices.
-ZinPointF.cs - C# file containing a class related to Zin points.
-ZpenSample.csproj - Project file for the ZpenSample project.
+### Files in ZpenSample Directory:
 
-ZpenSample
-    -bin
-        -Debug
-        -Release
-    -obj
-        -Debug
-        -Release
-    -properties
-        AssemblyInfo.cs
-        Resource.Designer.cs
-        Resource.resx
-        Settings.Designer.cs
-        Settings.settings
-    app.config
-    DataPassByStaticField.cs
-    FromZopenSample.cs
-    FromZopenSample.Designer.cs\
-    FromZopenSample.resx
-    Program.cs
-    USBWatcher.cs
-    ZinPointF.cs
-    ZpenSample.csproj
+- **bin/**
+  - Contains compiled binaries.
+    - **Debug/**
+      - Debug build output.
+    - **Release/**
+      - Release build output.
+
+- **obj/**
+  - Contains intermediate build files.
+    - **Debug/**
+      - Debug build intermediate files.
+    - **Release/**
+      - Release build intermediate files.
+
+- **properties/**
+  - Contains project properties files.
+    - `AssemblyInfo.cs`: Contains assembly-level attributes.
+    - `Resource.Designer.cs`: Auto-generated code for strongly-typed resources.
+    - `Resource.resx`: Resource file.
+    - `Settings.Designer.cs`: Auto-generated code for settings.
+    - `Settings.settings`: Settings file.
+
+- `app.config`: Application configuration file.
+
+- `DataPassByStaticField.cs`: C# file defining a class for data passing by static fields.
+
+- `FromZopenSample.cs`: C# file containing the main logic of the ZpenSample application.
+
+- `FromZopenSample.Designer.cs`: Auto-generated code related to the design of FromZopenSample form.
+
+- `FromZopenSample.resx`: Resource file for FromZopenSample form.
+
+- `Program.cs`: C# file containing the entry point of the application.
+
+- `USBWatcher.cs`: C# file defining a class for watching USB devices.
+
+- `ZinPointF.cs`: C# file defining a class for representing a point in Zin format.
+
+- `ZpenSample.csproj`: Project file for the ZpenSample application.
 
 
 
