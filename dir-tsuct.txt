@@ -1,0 +1,23 @@
+ZpenSample
+    -bin
+        -Debug
+        -Release
+    -obj
+        -Debug
+        -Release
+    -properties
+        AssemblyInfo.cs
+        Resource.Designer.cs
+        Resource.resx
+        Settings.Designer.cs
+        Settings.settings
+    app.config
+    DataPassByStaticField.cs
+    FromZopenSample.cs
+    FromZopenSample.Designer.cs\
+    FromZopenSample.resx
+    Program.cs
+    USBWatcher.cs
+    ZinPointF.cs
+    ZpenSample.csproj
+
