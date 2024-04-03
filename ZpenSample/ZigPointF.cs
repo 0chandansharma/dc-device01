@@ -1,4 +1,8 @@
-﻿using System;
+﻿
+// The ZigPointF.cs file defines a class named ZigPointF, which appears to represent a point in a two-dimensional space with additional properties p, r, and t. However, some of the properties (r and t) are currently commented out in the code.
+// It seems like the class is designed to represent a point with x and y coordinates, along with additional properties. However, the commented-out code suggests that there might be additional properties (r and t) that were considered but not implemented or used in the current version of the code.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
